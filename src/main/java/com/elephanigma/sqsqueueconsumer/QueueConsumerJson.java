@@ -1,4 +1,4 @@
-package com.elephanigma.sqsqueuemonitor;
+package com.elephanigma.sqsqueueconsumer;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -7,36 +7,36 @@ import org.apache.log4j.Logger;
 import java.lang.reflect.Type;
 import java.util.Map;
 
-public class QueueMonitorJson implements Runnable
+public class QueueConsumerJson implements Runnable
 {
 	public void run()
 	{
-		Thread emailProcessingThread = new Thread(genericQueueMonitor);
+		Thread emailProcessingThread = new Thread(genericQueueConsumer);
 		emailProcessingThread.start();
 	}
 
 	public interface JsonQueueMessageProcessor
 	{
-		void processMessage(Map<String,String> message) throws QueueMonitor.MessageProcessingException;
+		void processMessage(Map<String,String> message) throws QueueConsumer.MessageProcessingException;
 	}
 
 	private JsonQueueMessageProcessor messageProcessor;
-	private QueueMonitor genericQueueMonitor;
+	private QueueConsumer genericQueueConsumer;
 
-	public QueueMonitorJson(String queueUrl, String queueRegion, final JsonQueueMessageProcessor messageProcessor, Logger logger)
+	public QueueConsumerJson(String queueUrl, String queueRegion, final JsonQueueMessageProcessor messageProcessor, Logger logger)
 	{
 		this.messageProcessor = messageProcessor;
 
-		QueueMonitor.QueueMessageProcessor genericMessageProcessor = new QueueMonitor.QueueMessageProcessor()
+		QueueConsumer.QueueMessageProcessor genericMessageProcessor = new QueueConsumer.QueueMessageProcessor()
 		{
-			public void processMessage(String message) throws QueueMonitor.MessageProcessingException
+			public void processMessage(String message) throws QueueConsumer.MessageProcessingException
 			{
 				Map<String,String> messageMap = parseSqsJson(message);
 				messageProcessor.processMessage(messageMap);
 			}
 		};
 
-		genericQueueMonitor = new QueueMonitor(queueUrl, queueRegion, genericMessageProcessor, logger);
+		genericQueueConsumer = new QueueConsumer(queueUrl, queueRegion, genericMessageProcessor, logger);
 
 	}
 

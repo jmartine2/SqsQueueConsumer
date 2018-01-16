@@ -1,4 +1,4 @@
-package com.elephanigma.sqsqueuemonitor;
+package com.elephanigma.sqsqueueconsumer;
 
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.services.sqs.AmazonSQS;
@@ -6,16 +6,13 @@ import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
 import com.amazonaws.services.sqs.model.DeleteMessageRequest;
 import com.amazonaws.services.sqs.model.Message;
 import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
-import com.google.gson.reflect.TypeToken;
 import org.apache.log4j.Logger;
 
-import java.lang.reflect.Type;
 import java.util.List;
-import java.util.Map;
 
 import static java.lang.Thread.sleep;
 
-public class QueueMonitor implements Runnable
+public class QueueConsumer implements Runnable
 {
 	private org.apache.log4j.Logger log;
 	private String queueUrl;
@@ -40,7 +37,7 @@ public class QueueMonitor implements Runnable
 		}
 	}
 
-	public QueueMonitor(String queueUrl, String queueRegion, QueueMessageProcessor messageProcessor, Logger logger)
+	public QueueConsumer(String queueUrl, String queueRegion, QueueMessageProcessor messageProcessor, Logger logger)
 	{
 		this.queueUrl = queueUrl;
 		this.queueRegion = queueRegion;
